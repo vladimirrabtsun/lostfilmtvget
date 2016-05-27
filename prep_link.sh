@@ -71,6 +71,10 @@ fi
 
 
 
+if [ ser_c_selected=1 & ser_s_selected=1 & ser_e_selected=1 ]; then
 
 # Формируем ссылку на страницу для загрузки торрент-файлов, передавая атрибуты: c, s и e.
 link_to_download_page = echo "https://lostfilm.tv/nrdr2.php?c=$ser_c&s=$ser_s&e=$ser_e"
+
+else
+	echo "Ошибка (Код:5). Неопредены переменные."
