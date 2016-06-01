@@ -12,12 +12,12 @@ ser_e_1_2=$(cat current.ses_ep.selected.serials.tmp | cut -c 5-6)
 ser_e_1=$(cat current.ses_ep.selected.serials.tmp | cut -c 5-5)
 ser_e_2=$(cat current.ses_ep.selected.serials.tmp | cut -c 6-6)
 
-echo "Отладка: ser_s_1_2= $ser_s_1_2" #отдадка
-echo "Отладка: ser_s_1= $ser_s_1" #отдадка
-echo "Отладка: ser_s_2= $ser_s_2" #отдадка
-echo "Отладка: ser_e_1_2= $ser_e_1_2" #отладка
-echo "Отладка: ser_e_1= $ser_e_1" #отдадка
-echo "Отладка: ser_e_2= $ser_e_2" #отдадка
+#echo "Отладка: ser_s_1_2= $ser_s_1_2" #отдадка
+#echo "Отладка: ser_s_1= $ser_s_1" #отдадка
+#echo "Отладка: ser_s_2= $ser_s_2" #отдадка
+#echo "Отладка: ser_e_1_2= $ser_e_1_2" #отладка
+#echo "Отладка: ser_e_1= $ser_e_1" #отдадка
+#echo "Отладка: ser_e_2= $ser_e_2" #отдадка
 
 null_eq=0
 if [ "$ser_s_1" = "$null_eq" ]; then
@@ -26,7 +26,7 @@ else
 	ser_s_post=$ser_s_1_2
 fi
 
-echo "Отладка: ser_s_post= $ser_s_post" #отладка
+#echo "Отладка: ser_s_post= $ser_s_post" #отладка
 
 ser_s_selected=0
 if [ -e "$ser_s_post" ]; then
@@ -43,7 +43,7 @@ else
 	ser_e_post=$ser_e_1_2
 fi
 
-echo "Отладка: ser_e_post= $ser_e_post"
+#echo "Отладка: ser_e_post= $ser_e_post"
 
 ser_e_selected=0
 if [ -e "$ser_e_post" ]; then
@@ -57,15 +57,21 @@ fi
 # Определяем наименование сериала и его порядковый номер на lostfilm.tv
 ser_name=$(cat tmp.2 | grep -oie '\(Fear.the.Walking.Dead\|Mr.Robot\|The.Walking.Dead\|The.X-Files\|Person.of.Interest\)')
 
-if [ "$ser_name" = "Fear.the.Walking.Dead" ]; then
+ser_name_c_252="Fear.the.Walking.Dead"
+ser_name_c_245="Mr.Robot"
+ser_name_c_134="The.Walking.Dead"
+ser_name_c_270="The.X-Files"
+ser_name_c_159="Person.of.Interest"
+
+if [ "$ser_name" = "$ser_name_c_252" ]; then
 	ser_c=252
-elif [ "$ser_name" = "Mr.Robot" ]; then
+elif [ "$ser_name" = "$ser_name_c_245" ]; then
 	ser_c=245
-elif [ "$ser_name" = "The.Walking.Dead" ]; then
+elif [ "$ser_name" = "$ser_name_c_134" ]; then
 	ser_c=134
-elif [ "$ser_name" = "The.X-Files" ]; then
+elif [ "$ser_name" = "$ser_name_c_270" ]; then
 	ser_c=270
-elif [ "$ser_name" = "Person.of.Interest" ]; then
+elif [ "$ser_name" = "$ser_name_c_159" ]; then
 	ser_c=159
 else
 	echo "[ERROR] Ошибка (Код:1). Некорректное значение переменной ser_name."
@@ -75,7 +81,7 @@ fi
 
 ser_c_selected=0
 
-if [ !$ser_c ]; then
+if [ -e "$ser_c" ]; then
 	echo "[ERROR] Ошибка (Код:2). Переменная ser_c не назначена."
 else
 	ser_c_selected=1
