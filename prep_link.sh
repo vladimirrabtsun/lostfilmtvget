@@ -29,8 +29,8 @@ fi
 echo "Отладка: ser_s_post= $ser_s_post" #отладка
 
 ser_s_selected=0
-if [ !ser_s_post ]; then
-	echo "Ошибка (Код:3). Переменная ser_s_post не назначена."
+if [ -e "$ser_s_post" ]; then
+	echo "[ERROR] Ошибка (Код:3). Переменная ser_s_post не назначена."
 else
 	ser_s_selected=1
 	echo "[OK] Определение номера серии сериала: ser_s_post = $ser_s_post"
@@ -46,8 +46,8 @@ fi
 echo "Отладка: ser_e_post= $ser_e_post"
 
 ser_e_selected=0
-if [ !ser_e_post ]; then
-        echo "Ошибка (Код:4). Переменная ser_e_post не назначена."
+if [ -e "$ser_e_post" ]; then
+        echo "[ERROR] Ошибка (Код:4). Переменная ser_e_post не назначена."
 else
         ser_e_selected=1
         echo "[OK] Определение номера сезона сериала: ser_e_post = $ser_e_post"
@@ -68,7 +68,7 @@ elif [ "$ser_name" = "The.X-Files" ]; then
 elif [ "$ser_name" = "Person.of.Interest" ]; then
 	ser_c=159
 else
-	echo "Ошибка (Код:1). Некорректное значение переменной ser_name."
+	echo "[ERROR] Ошибка (Код:1). Некорректное значение переменной ser_name."
 fi
 
 
@@ -76,7 +76,7 @@ fi
 ser_c_selected=0
 
 if [ !$ser_c ]; then
-	echo "Ошибка (Код:2). Переменная ser_c не назначена."
+	echo "[ERROR] Ошибка (Код:2). Переменная ser_c не назначена."
 else
 	ser_c_selected=1
 	echo "[OK] Определение порядкового номера сериала: ser_c = $ser_c ($ser_name)"
