@@ -33,7 +33,7 @@ if [ -e "$ser_s_post" ]; then
 	echo "[ERROR] Ошибка (Код:3). Переменная ser_s_post не назначена."
 else
 	ser_s_selected=1
-	echo "[OK] Определение номера серии сериала: ser_s_post = $ser_s_post"
+	echo "[OK] Определение номера сезона сериала: ser_s_post = $ser_s_post"
 fi
 
 
@@ -50,7 +50,7 @@ if [ -e "$ser_e_post" ]; then
         echo "[ERROR] Ошибка (Код:4). Переменная ser_e_post не назначена."
 else
         ser_e_selected=1
-        echo "[OK] Определение номера сезона сериала: ser_e_post = $ser_e_post"
+        echo "[OK] Определение номера серии сериала: ser_e_post = $ser_e_post"
 fi
 
 
@@ -88,16 +88,32 @@ else
 	echo "[OK] Определение порядкового номера сериала: ser_c = $ser_c ($ser_name)"
 fi
 
+ready_to_gen_link=0
+true_argument=1
+false_argument=0
 
-
-#if [ [$ser_c_selected=1] & [$ser_s_selected=1] & [$ser_e_selected=1] ]; then
+if [ "$ser_c_selected" = "$true_argument" ]; then
+	if [ "$ser_s_selected" = "$true_argument" ]; then
+		if [ "$ser_e_selected" = "$true_argument" ]; then
+			ready_to_gen_link=1
+			echo "[OK] Все переменные назначены."
+		else
+			echo "[ERROR] Ошибка (Код:8). Переменная ser_e_selected не удовлетворяет требованиям."
+		fi
+	else
+		echo "[ERROR] Ошибка (Код:7). Переменная ser_s_selected не удовлетворяет требованиям."
+	fi
+else
+	echo "[ERROR] Ошибка (Код:6). Переменная ser_c_selected не удовлетворяет требованиям."
+fi
 
 # Формируем ссылку на страницу для загрузки торрент-файлов, передавая атрибуты: c, s и e.
-#link_to_download_page = echo "https://lostfilm.tv/nrdr2.php?c=$ser_c&s=$ser_s&e=$ser_e"
-
-#else
-#	echo "Ошибка (Код:5). Неопредены переменные."
-#fi
+if [ "$ready_to_gen_link" = "$true_argument" ]; then
+	link_to_download_page="https://lostfilm.tv/nrdr2.php?c=$ser_c&s=$ser_s_post&e=$ser_e_post"
+	echo $link_to_download_page
+else
+	echo "Ошибка (Код:5). Неопредены необходимые переменные."
+fi
 
 rm selected.serials.tmp
 echo "[OK] Удаление временного файла selected.serials.tmp"
