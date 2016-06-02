@@ -12,12 +12,12 @@ ser_e_1_2=$(cat current.ses_ep.selected.serials.tmp | cut -c 5-6)
 ser_e_1=$(cat current.ses_ep.selected.serials.tmp | cut -c 5-5)
 ser_e_2=$(cat current.ses_ep.selected.serials.tmp | cut -c 6-6)
 
-#echo "Отладка: ser_s_1_2= $ser_s_1_2" #отдадка
-#echo "Отладка: ser_s_1= $ser_s_1" #отдадка
-#echo "Отладка: ser_s_2= $ser_s_2" #отдадка
-#echo "Отладка: ser_e_1_2= $ser_e_1_2" #отладка
-#echo "Отладка: ser_e_1= $ser_e_1" #отдадка
-#echo "Отладка: ser_e_2= $ser_e_2" #отдадка
+#echo "[DEBUG] ser_s_1_2= $ser_s_1_2" #отдадка
+#echo "[DEBUG] ser_s_1= $ser_s_1" #отдадка
+#echo "[DEBUG] ser_s_2= $ser_s_2" #отдадка
+#echo "[DEBUG] ser_e_1_2= $ser_e_1_2" #отладка
+#echo "[DEBUG] ser_e_1= $ser_e_1" #отдадка
+#echo "[DEBUG] ser_e_2= $ser_e_2" #отдадка
 
 null_eq=0
 if [ "$ser_s_1" = "$null_eq" ]; then
@@ -26,7 +26,7 @@ else
 	ser_s_post=$ser_s_1_2
 fi
 
-#echo "Отладка: ser_s_post= $ser_s_post" #отладка
+#echo "[DEBUG] ser_s_post= $ser_s_post" #отладка
 
 ser_s_selected=0
 if [ -e "$ser_s_post" ]; then
@@ -43,7 +43,7 @@ else
 	ser_e_post=$ser_e_1_2
 fi
 
-#echo "Отладка: ser_e_post= $ser_e_post"
+#echo "[DEBUG] ser_e_post= $ser_e_post"
 
 ser_e_selected=0
 if [ -e "$ser_e_post" ]; then
@@ -110,11 +110,13 @@ fi
 # Формируем ссылку на страницу для загрузки торрент-файлов, передавая атрибуты: c, s и e.
 if [ "$ready_to_gen_link" = "$true_argument" ]; then
 	link_to_download_page="https://lostfilm.tv/nrdr2.php?c=$ser_c&s=$ser_s_post&e=$ser_e_post"
-	echo $link_to_download_page
+	echo "[OK] Определение страницы с ссылками для загрузки: $link_to_download_page"
 else
 	echo "Ошибка (Код:5). Неопредены необходимые переменные."
 fi
 
+
+# Удаляем временные файлы
 rm selected.serials.tmp
 echo "[OK] Удаление временного файла selected.serials.tmp"
 
