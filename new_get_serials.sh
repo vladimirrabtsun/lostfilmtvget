@@ -175,6 +175,18 @@ echo !!! download $tor_name
 echo ------------ >> download.torrent.list
 echo `date`: download $tor_name >> download.torrent.list
 mv $tor_name $WDIR
+
+SERVER="followmortimer.com:25"
+FROM="mail@followmortimer.com"
+TO="vladimir.rabtsun@gmail.com"
+TXT="Есть новые серии!!!"
+MSG=$TXT
+SUB=$TXT
+xu=alert@followmortimer.com
+xp=
+
+sendEmail -xu $xu -xp $xp -f $FROM -t $TO -u $SUB -m $MSG -s $SERVER
+
 else
 echo "Файл $tor_name уже существует в $WDIR"
 fi
