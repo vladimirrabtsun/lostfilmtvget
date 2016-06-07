@@ -1,6 +1,6 @@
 #update 1
 # Забираем в файл selected.serials.tmp только искомые сериалы по названию.
-cat tmp.2 | grep -ie '\(Fear.the.Walking.Dead\|Mr.Robot\|The.Walking.Dead\|The.X-Files\|Person.of.Interest\)' >> selected.serials.tmp
+#cat tmp.2 | grep -ie '\(Fear.the.Walking.Dead\|Mr.Robot\|The.Walking.Dead\|The.X-Files\|Person.of.Interest\)' >> selected.serials.tmp
 
 declare -a sc
 sc=(`cat tmp.2 | grep -ie '\(Fear.the.Walking.Dead\|Mr.Robot\|The.Walking.Dead\|The.X-Files\|Person.of.Interest\)' | tr '\n' ' '`)
