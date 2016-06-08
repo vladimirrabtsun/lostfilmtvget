@@ -1,0 +1,2 @@
+# Монтирование ftp-раздела:
+sudo curlftpfs pi:Zxcasdqwe52.@10.0.0.1/sda1/ ~/Downloads/share_tor/ -o allow_other

@@ -14,7 +14,7 @@ cat $TMP1 | grep -ioe 'http.*torrent'| grep -ie '1080p' > $TMP2
 #update 1
 
 declare -a sc
-sc=(`cat $TMP2 | grep -ie '\(Fear.the.Walking.Dead\|Mr.Robot\|The.Walking.Dead\|The.X-Files\|Person.of.Interest\)' | tr '\n' ' '`)
+sc=(`cat $TMP2 | grep -ie '\(Fear.the.Walking.Dead\|Penny.Dreadful\|Mr.Robot\|The.Walking.Dead\|The.X-Files\|Person.of.Interest\)' | tr '\n' ' '`)
 
 # Определяем номер созона и номер серии.
 
@@ -74,9 +74,10 @@ fi
 
 
 # Определяем наименование сериала и его порядковый номер на lostfilm.tv
-ser_name=`echo $one_of | grep -oie '\(Fear.the.Walking.Dead\|Mr.Robot\|The.Walking.Dead\|The.X-Files\|Person.of.Interest\)'`
+ser_name=`echo $one_of | grep -oie '\(Fear.the.Walking.Dead\|Penny.Dreadful\|Mr.Robot\|The.Walking.Dead\|The.X-Files\|Person.of.Interest\)'`
 
 ser_name_c_252="Fear.the.Walking.Dead"
+ser_name_c_210="Penny.Dreadful"
 ser_name_c_245="Mr.Robot"
 ser_name_c_134="The.Walking.Dead"
 ser_name_c_270="The.X-Files"
@@ -84,14 +85,22 @@ ser_name_c_159="Person.of.Interest"
 
 if [ "$ser_name" = "$ser_name_c_252" ]; then
 	ser_c=252
+	ser_name_rus="Бойтесь.ходячих.мертвецов"
+elif [ "$ser_name" = "$ser_name_c_210" ]; then
+        ser_c=210
+        ser_name_rus="Бульварные.ужасы"
 elif [ "$ser_name" = "$ser_name_c_245" ]; then
 	ser_c=245
+	ser_name_rus="Мистер.Робот"
 elif [ "$ser_name" = "$ser_name_c_134" ]; then
 	ser_c=134
+	ser_name_rus="Ходячие.мертвецы"
 elif [ "$ser_name" = "$ser_name_c_270" ]; then
 	ser_c=270
+	ser_name_rus="Секретные.материалы"
 elif [ "$ser_name" = "$ser_name_c_159" ]; then
 	ser_c=159
+	ser_name_rus="Подозреваемый"
 else
 	echo "[ERROR] Ошибка (Код:1). Некорректное значение переменной ser_name."
 fi
@@ -150,16 +159,18 @@ lfrss1=$link_to_dl_page_final
 
 /usr/bin/wget -O dl_page_final.tmp $lfrss1 --user-agent="$ua" --no-cookies --header="$lfcookie" $l
 
+if [ "$ser_name" = "$ser_name_c_210" ];then
+link_to_dl_torrent=$(cat dl_page_final.tmp | grep -m1 -ie '1080p WEBRip.' -A 1 | grep -ioe '<a href=".*" ' | cut -c 10- | rev | cut -c 3- | rev)
+else
 link_to_dl_torrent=$(cat dl_page_final.tmp | grep -ie '1080p WEB-DLRip\.' -A 1 | grep -ioe '<a href=".*" ' | cut -c 10- | rev | cut -c 3- | rev)
-
+fi
 #echo "[DEBUG] link_to_dl_torrent=$link_to_dl_torrent" # Отладка
 
 
-echo "$link_to_dl_torrent"";""$ser_c""-""$ser_s_post""-""$ser_e_post"".torrent" >> list_to_download.tmp
+echo "$link_to_dl_torrent"";""$ser_name""-""$ser_c""-""$ser_s_post""-""$ser_e_post"".torrent"";""$ser_name_rus"".(cезон.""$ser_s_post"".серия.""$ser_e_post"")" >> list_to_download.tmp
 rm dl_page_stage.tmp
 rm dl_page_final.tmp
 done
-
 
 
 ##########
@@ -168,28 +179,32 @@ for l in `cat list_to_download.tmp`
 do
 tor_link=`echo $l | cut -d';' -f1`
 tor_name=`echo $l | cut -d';' -f2`
+tor_name_msg=`echo $l | cut -d';' -f3`
 if [ ! -f $WDIR/$tor_name ]
 then
 echo !!! download $tor_name
 /usr/bin/wget -nc -O $tor_name $tor_link
-echo ------------ >> download.torrent.list
-echo `date`: download $tor_name >> download.torrent.list
+echo $tor_name_msg >> downloaded_to_mail
 mv $tor_name $WDIR
-
-SERVER="followmortimer.com:25"
-FROM="mail@followmortimer.com"
-TO="vladimir.rabtsun@gmail.com"
-TXT="Есть новые серии!!!"
-MSG=$TXT
-SUB=$TXT
-xu=alert@followmortimer.com
-xp=
-
-sendEmail -xu $xu -xp $xp -f $FROM -t $TO -u $SUB -m $MSG -s $SERVER
 
 else
 echo "Файл $tor_name уже существует в $WDIR"
 fi
 done
 
+if [ -f downloaded_to_mail ]
+then
+ser_col=`wc -l downloaded_to_mail | cut -d ' ' -f1`
+SERVER="followmortimer.com:25"
+FROM="alert@followmortimer.com"
+TO="vladimir.rabtsun@gmail.com"
+MSG=`cat downloaded_to_mail`
+SUB="Новые серии: ""$ser_col"
+xu=alert@followmortimer.com
+xp=lostfilmalert
+
+sendEmail -xu $xu -xp $xp -f $FROM -t $TO -u $SUB -m $MSG -s $SERVER
+fi
+
 rm list_to_download.tmp
+rm downloaded_to_mail
