@@ -1,10 +1,13 @@
 # Переменные TMP1 и TMP2 участвуют при скрепинге.
 TMP1=tmp.1
 TMP2=tmp.2
-# Вспомогательные переменные
+# Вспомогательные переменные.
 null_eq=0
 true_argument=1
 false_argument=0
+# Переменные для логов.
+llast=last_get.log
+lall=all_get.log
 # Ссылка на RSS-ку.
 lfrss="http://www.lostfilm.tv/rssdd.xml"
 # Куки для запроса RSS-ки.
@@ -13,9 +16,20 @@ ua="Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)"
 # Директория, которую наблюдает Transmission-Daemon, на наличие новых *.torrent-файлов.
 WDIR=~/Downloads/torrents_lostfilm_tv
 # Качаем RSS
+ls1t=`date`
+ls1ts=`date +%s`
+ls1m="Загрузка RSS с адреса: $lfrss"
 /usr/bin/wget -O $TMP1 $lfrss
 # Ищем ссылки в RSS-ке, берем только те, в которых присутсвует обозначение: 1080p.
+if [! -f $TMP1 ]; then
+ls2t=`date`
+ls2ts=`date +%s`
+ls2m="Загрузка RSS не состоялась ($lfrss)"
+echo $ls2m
+exit
+else
 cat $TMP1 | grep -ioe 'http.*torrent'| grep -ie '1080p' > $TMP2
+fi
 # Вносим результат в массив, берем только те ссылки, в которых присутсвуют названия только определенных сериалов.
 declare -a sc
 sc=(`cat $TMP2 | grep -ie '\(Fear.the.Walking.Dead\|Penny.Dreadful\|Mr.Robot\|The.Walking.Dead\|The.X-Files\|Person.of.Interest\)' | tr '\n' ' '`)
@@ -168,7 +182,7 @@ ser_col=`wc -l downloaded_to_mail | cut -d ' ' -f1`
 # Реквизиты для отправки уведомления на почту.
 SERVER="followmortimer.com:25"
 FROM="alert@followmortimer.com"
-TO="vladimir.rabtsun@gmail.com"
+TO="vladimir.rabtsun@gmail.com,wolf_159@mail.ru"
 MSG=`cat downloaded_to_mail`
 SUB="Новые серии: ""$ser_col"
 xu=alert@followmortimer.com
