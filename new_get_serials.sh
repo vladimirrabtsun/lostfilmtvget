@@ -15,24 +15,56 @@ lfcookie="Cookie: _ga=GA1.2.1172720830.1460950075; _gat=1; _ym_isad=2; _ym_uid=1
 ua="Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)"
 # Директория, которую наблюдает Transmission-Daemon, на наличие новых *.torrent-файлов.
 WDIR=~/Downloads/torrents_lostfilm_tv
-# Качаем RSS
+# Чистим последний лог.
+if [ -f $llast ]; then
+        rm $llast
+fi
+# Качаем RSS.
 ls1t=`date`
 ls1ts=`date +%s`
 ls1m="Загрузка RSS с адреса: $lfrss"
+echo $ls1m
+echo "$ls1t"" (""$ls1ts""): ""$ls1m" > $llast
 /usr/bin/wget -O $TMP1 $lfrss
-# Ищем ссылки в RSS-ке, берем только те, в которых присутсвует обозначение: 1080p.
-if [! -f $TMP1 ]; then
+# Проверяем, состоялась ли загрузка RSS-ки.
+if [ ! -f $TMP1 ]; then
 ls2t=`date`
 ls2ts=`date +%s`
-ls2m="Загрузка RSS не состоялась ($lfrss)"
+ls2m="[ERROR] Ошибка (Код ). Загрузка RSS не состоялась ($lfrss)"
 echo $ls2m
+echo "$ls2t"" (""$ls2ts""): ""$ls2m" >> $llast
+echo "----------------------------------------" >> $lall
+cat $llast >> $lall
 exit
 else
-cat $TMP1 | grep -ioe 'http.*torrent'| grep -ie '1080p' > $TMP2
+ls2t=`date`
+ls2ts=`date +%s`
+ls2m="[OK] Загрузка RSS состоялась успешно ($lfrss)"
+echo $ls2m
+echo "$ls2t"" (""$ls2ts""): ""$ls2m" >> $llast
 fi
+# Ищем ссылки в RSS-ке, берем только те, в которых присутсвует обозначение: 1080p.
+cat $TMP1 | grep -ioe 'http.*torrent'| grep -ie '1080p' > $TMP2
 # Вносим результат в массив, берем только те ссылки, в которых присутсвуют названия только определенных сериалов.
 declare -a sc
 sc=(`cat $TMP2 | grep -ie '\(Fear.the.Walking.Dead\|Penny.Dreadful\|Mr.Robot\|The.Walking.Dead\|The.X-Files\|Person.of.Interest\)' | tr '\n' ' '`)
+qty_of_listed=`echo ${#sc[@]}`
+if [ $qty_of_listed -eq 0 ]; then
+ls3t=`date`
+ls3ts=`date +%s`
+ls3m="[OK] Искомых сериалов среди новых не найдено (qty_of_listed="$qty_of_listed")"
+echo $ls3m
+echo "$ls3t"" (""$ls3ts""): ""$ls3m" >> $llast
+echo "----------------------------------------" >> $lall
+cat $llast >> $lall
+exit
+else
+ls3t=`date`
+ls3ts=`date +%s`
+ls3m="[OK] Среди новых сериалов найдены искомые (qty_of_listed=""$qty_of_listed"")"
+echo $ls3m
+echo "$ls3t"" (""$ls3ts""): ""$ls3m" >> $llast
+fi
 # Т.к. количество найденных ссылок может быть более одной, запускаем цикл, для каждой.
 for one_of in ${sc[@]} ; do
 # Определяем номер созона и номер серии.
