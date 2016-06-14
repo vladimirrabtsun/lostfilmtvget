@@ -20,6 +20,7 @@ if [ -f $llast ]; then
         rm $llast
 fi
 # Качаем RSS.
+# [LOG] Логирование события.
 ls1t=`date`
 ls1ts=`date +%s`
 ls1m="Загрузка RSS с адреса: $lfrss"
@@ -28,20 +29,23 @@ echo "$ls1t"" (""$ls1ts""): ""$ls1m" > $llast
 /usr/bin/wget -O $TMP1 $lfrss
 # Проверяем, состоялась ли загрузка RSS-ки.
 if [ ! -f $TMP1 ]; then
-ls2t=`date`
-ls2ts=`date +%s`
-ls2m="[ERROR] Ошибка (Код ). Загрузка RSS не состоялась ($lfrss)"
-echo $ls2m
-echo "$ls2t"" (""$ls2ts""): ""$ls2m" >> $llast
-echo "----------------------------------------" >> $lall
-cat $llast >> $lall
-exit
+	# [LOG] Логирование события.
+	ls2t=`date`
+	ls2ts=`date +%s`
+	ls2m="[ERROR] Ошибка (Код ). Загрузка RSS не состоялась ($lfrss)"
+	echo $ls2m
+	echo "$ls2t"" (""$ls2ts""): ""$ls2m" >> $llast
+	echo "----------------------------------------" >> $lall
+	cat $llast >> $lall
+	# Выход из программы.
+	exit
 else
-ls2t=`date`
-ls2ts=`date +%s`
-ls2m="[OK] Загрузка RSS состоялась успешно ($lfrss)"
-echo $ls2m
-echo "$ls2t"" (""$ls2ts""): ""$ls2m" >> $llast
+	# [LOG] Логирование события.
+	ls2t=`date`
+	ls2ts=`date +%s`
+	ls2m="[OK] Загрузка RSS состоялась успешно ($lfrss)"
+	echo $ls2m
+	echo "$ls2t"" (""$ls2ts""): ""$ls2m" >> $llast
 fi
 # Ищем ссылки в RSS-ке, берем только те, в которых присутсвует обозначение: 1080p.
 cat $TMP1 | grep -ioe 'http.*torrent'| grep -ie '1080p' > $TMP2
@@ -50,20 +54,23 @@ declare -a sc
 sc=(`cat $TMP2 | grep -ie '\(Fear.the.Walking.Dead\|Penny.Dreadful\|Mr.Robot\|The.Walking.Dead\|The.X-Files\|Person.of.Interest\)' | tr '\n' ' '`)
 qty_of_listed=`echo ${#sc[@]}`
 if [ $qty_of_listed -eq 0 ]; then
-ls3t=`date`
-ls3ts=`date +%s`
-ls3m="[OK] Искомых сериалов среди новых не найдено (qty_of_listed="$qty_of_listed")"
-echo $ls3m
-echo "$ls3t"" (""$ls3ts""): ""$ls3m" >> $llast
-echo "----------------------------------------" >> $lall
-cat $llast >> $lall
-exit
+	# [LOG] Логирование события.
+	ls3t=`date`
+	ls3ts=`date +%s`
+	ls3m="[OK] Искомых сериалов среди новых не найдено (qty_of_listed="$qty_of_listed")"
+	echo $ls3m
+	echo "$ls3t"" (""$ls3ts""): ""$ls3m" >> $llast
+	echo "----------------------------------------" >> $lall
+	cat $llast >> $lall
+	# Выход из программы.
+	exit
 else
-ls3t=`date`
-ls3ts=`date +%s`
-ls3m="[OK] Среди новых сериалов найдены искомые (qty_of_listed=""$qty_of_listed"")"
-echo $ls3m
-echo "$ls3t"" (""$ls3ts""): ""$ls3m" >> $llast
+	# [LOG] Логирование события.
+	ls3t=`date`
+	ls3ts=`date +%s`
+	ls3m="[OK] Среди новых сериалов найдены искомые (qty_of_listed=""$qty_of_listed"")"
+	echo $ls3m
+	echo "$ls3t"" (""$ls3ts""): ""$ls3m" >> $llast
 fi
 # Т.к. количество найденных ссылок может быть более одной, запускаем цикл, для каждой.
 for one_of in ${sc[@]} ; do
@@ -82,10 +89,20 @@ else
 fi
 ser_s_selected=0
 if [ -e "$ser_s_post" ]; then
-	echo "[ERROR] Ошибка (Код:3). Переменная ser_s_post не назначена."
+	# [LOG] Логирование события.
+	ls4t=`date`
+	ls4ts=`date +%s`
+	ls4m="[ERROR] Ошибка (Код ). Переменная ser_s_post не назначена."
+	echo $ls4m
+	echo "$ls4t"" (""$ls4ts""): ""$ls4m" >> $llast
 else
 	ser_s_selected=1
-	echo "[OK] Определение номера сезона сериала: ser_s_post = $ser_s_post"
+	# [LOG] Логирование события.
+	ls4t=`date`
+        ls4ts=`date +%s`
+        ls4m="[OK] Определение номера сезона сериала: ser_s_post = $ser_s_post"
+	echo $ls4m
+        echo "$ls4t"" (""$ls4ts""): ""$ls4m" >> $llast
 fi
 if [ "$ser_e_1" = "$null_eq" ]; then
 	ser_e_post=$ser_e_2
@@ -94,13 +111,29 @@ else
 fi
 ser_e_selected=0
 if [ -e "$ser_e_post" ]; then
-        echo "[ERROR] Ошибка (Код:4). Переменная ser_e_post не назначена."
+	# [LOG] Логирование события.
+	ls5t=`date`
+	ls5ts=`date +%s`
+	ls5m="[ERROR] Ошибка (Код:4). Переменная ser_e_post не назначена."
+        echo $ls5m
+        echo "$ls5t"" (""$ls5ts""): ""$ls5m" >> $llast
 else
-        ser_e_selected=1
-        echo "[OK] Определение номера серии сериала: ser_e_post = $ser_e_post"
+        # [LOG] Логирование события.
+	ser_e_selected=1
+        ls5t=`date`
+        ls5ts=`date +%s`
+        ls5m="[OK] Определение номера серии сериала: ser_e_post = $ser_e_post"
+	echo $ls5m
+        echo "$ls5t"" (""$ls5ts""): ""$ls5m" >> $llast
 fi
 # Определяем наименование сериала и его порядковый номер на lostfilm.tv.
 ser_name=`echo $one_of | grep -oie '\(Fear.the.Walking.Dead\|Penny.Dreadful\|Mr.Robot\|The.Walking.Dead\|The.X-Files\|Person.of.Interest\)'`
+# [LOG] Логирование события.
+ls6t=`date`
+ls6ts=`date +%s`
+ls6m="[OK] Определение наименования сериала: ser_name = $ser_name"
+echo $ls6m
+echo "$ls6t"" (""$ls6ts""): ""$ls6m" >> $llast
 # Список соответствия номера категории и наименования сериала.
 ser_name_c_252="Fear.the.Walking.Dead"
 ser_name_c_210="Penny.Dreadful"
@@ -108,7 +141,7 @@ ser_name_c_245="Mr.Robot"
 ser_name_c_134="The.Walking.Dead"
 ser_name_c_270="The.X-Files"
 ser_name_c_159="Person.of.Interest"
-# Назначение номера кагории и наименования на русском языке для сериала.
+# Назначение номера категории и наименования на русском языке для сериала.
 if [ "$ser_name" = "$ser_name_c_252" ]; then
 	ser_c=252
 	ser_name_rus="Бойтесь.ходячих.мертвецов"
@@ -128,14 +161,35 @@ elif [ "$ser_name" = "$ser_name_c_159" ]; then
 	ser_c=159
 	ser_name_rus="Подозреваемый"
 else
-	echo "[ERROR] Ошибка (Код:1). Некорректное значение переменной ser_name."
+	# [LOG] Логирование события.
+	ls7t=`date`
+	ls7ts=`date +%s`
+	ls7m=echo "[ERROR] Ошибка (Код:1). Некорректное значение переменной ser_name."
+	echo $ls7m
+	echo "$ls7t"" (""$ls7ts""): ""$ls7m" >> $llast
 fi
+# [LOG] Логирование события.
+ls7t=`date`
+ls7ts=`date +%s`
+ls7m="[OK] Определение наименования (рус.) и порядкового номера сериала: ser_name_rus = $ser_name_rus , ser_c=$ser_c"
+echo $ls7m
+echo "$ls7t"" (""$ls7ts""): ""$ls7m" >> $llast
 ser_c_selected=0
 if [ -e "$ser_c" ]; then
-	echo "[ERROR] Ошибка (Код:2). Переменная ser_c не назначена."
+	# [LOG] Логирование события.
+	ls8t=`date`
+	ls8ts=`date +%s`
+	ls8m="[ERROR] Ошибка (Код:2). Переменная ser_c не назначена."
+	echo $ls8m
+	echo "$ls8t"" (""$ls8ts""): ""$ls8m" >> $llast
 else
 	ser_c_selected=1
-	echo "[OK] Определение порядкового номера сериала: ser_c = $ser_c ($ser_name)"
+	# [LOG] Логирование события.
+	ls8t=`date`
+        ls8ts=`date +%s`
+        ls8m="[OK] Определение порядкового номера сериала: ser_c = $ser_c ($ser_name)"
+        echo $ls8m
+        echo "$ls8t"" (""$ls8ts""): ""$ls8m" >> $llast
 fi
 # Проверка на наличие агрументов для формировании ссылки.
 ready_to_gen_link=0
@@ -143,32 +197,87 @@ if [ "$ser_c_selected" = "$true_argument" ]; then
 	if [ "$ser_s_selected" = "$true_argument" ]; then
 		if [ "$ser_e_selected" = "$true_argument" ]; then
 			ready_to_gen_link=1
-			echo "[OK] Все переменные назначены."
+			# [LOG] Логирование события.
+        		ls8t=`date`
+        		ls8ts=`date +%s`
+        		ls8m="[OK] Все переменные назначены."
+			echo $ls8m
+        		echo "$ls8t"" (""$ls8ts""): ""$ls8m" >> $llast
 		else
-			echo "[ERROR] Ошибка (Код:8). Переменная ser_e_selected не удовлетворяет требованиям."
+			# [LOG] Логирование события.
+                        ls8t=`date`
+                        ls8ts=`date +%s`
+                        ls8m="[ERROR] Ошибка (Код:8). Переменная ser_e_selected не удовлетворяет требованиям."
+                        echo $ls8m
+                        echo "$ls8t"" (""$ls8ts""): ""$ls8m" >> $llast
 		fi
 	else
-		echo "[ERROR] Ошибка (Код:7). Переменная ser_s_selected не удовлетворяет требованиям."
+		# [LOG] Логирование события.
+                ls8t=`date`
+                ls8ts=`date +%s`
+                ls8m="[ERROR] Ошибка (Код:7). Переменная ser_s_selected не удовлетворяет требованиям."
+                echo $ls8m
+                echo "$ls8t"" (""$ls8ts""): ""$ls8m" >> $llast
 	fi
 else
-	echo "[ERROR] Ошибка (Код:6). Переменная ser_c_selected не удовлетворяет требованиям."
+	# [LOG] Логирование события.
+        ls8t=`date`
+        ls8ts=`date +%s`
+        ls8m="[ERROR] Ошибка (Код:6). Переменная ser_c_selected не удовлетворяет требованиям."
+        echo $ls8m
+        echo "$ls8t"" (""$ls8ts""): ""$ls8m" >> $llast
 fi
 # Формируем ссылку на промежуточную страницу для загрузки торрент-файлов, передавая атрибуты: c, s и e.
 if [ "$ready_to_gen_link" = "$true_argument" ]; then
 	link_to_dl_page_stage="https://lostfilm.tv/nrdr2.php?c=$ser_c&s=$ser_s_post&e=$ser_e_post"
-	echo "[OK] Определение страницы с ссылками для загрузки: $link_to_download_page"
+	# [LOG] Логирование события.
+        ls9t=`date`
+        ls9ts=`date +%s`
+        ls9m="[OK] Определение страницы с ссылками для загрузки: $link_to_download_page"
+        echo $ls9m
+        echo "$ls9t"" (""$ls9ts""): ""$ls9m" >> $llast
 else
-	echo "Ошибка (Код:5). Неопредены необходимые переменные."
+	# [LOG] Логирование события.
+        ls9t=`date`
+        ls9ts=`date +%s`
+        ls9m="Ошибка (Код:5). Неопредены необходимые переменные."
+        echo $ls9m
+        echo "$ls9t"" (""$ls9ts""): ""$ls9m" >> $llast
 fi
 # Загружаем промежуточную страницу.
 /usr/bin/wget -O dl_page_stage.tmp $link_to_dl_page_stage --user-agent="$ua" --no-cookies --header="$lfcookie" $l
+if [ ! -f dl_page_stage.tmp ]; then
+	# [LOG] Логирование события.
+	ls10t=`date`
+        ls10ts=`date +%s`
+        ls10m="[ERROR] Ошибка (Код:) Не найден файл dl_page_stage.tmp."
+        echo $ls10m
+        echo "$ls10t"" (""$ls10ts""): ""$ls10m" >> $llast
+else
+	# [LOG] Логирование события.
+	ls10t=`date`
+        ls10ts=`date +%s`
+        ls10m="[OK] Файл dl_page_stage.tmp успешно загружен."
+        echo $ls10m
+        echo "$ls10t"" (""$ls10ts""): ""$ls10m" >> $llast
+fi
 # Формируем ссылку на финальную страницу.
 link_to_dl_page_final=$(cat dl_page_stage.tmp | grep -ie 'location.replace("http://retre.org' | grep -ioe '(".*")' | cut -c 3- | rev | cut -c 3- | rev)
 # Проверяем наличие финальной ссылки.
 if [ -e "$link_to_dl_page_final" ]; then
-	echo "[ERROR] Ошибка (Код:9). Переменная link_to_dl_page_final не назначена."
+	# [LOG] Логирование события.
+        ls11t=`date`
+        ls11ts=`date +%s`
+        ls11m="[ERROR] Ошибка (Код:9). Переменная link_to_dl_page_final не назначена."
+        echo $ls11m
+        echo "$ls11t"" (""$ls11ts""): ""$ls11m" >> $llast
 else
-	echo "[OK] Определение ссылки: link_to_dl_page_final=$link_to_dl_page_final"
+        # [LOG] Логирование события.
+        ls11t=`date`
+        ls11ts=`date +%s`
+        ls11m="[OK] Определение ссылки: link_to_dl_page_final=$link_to_dl_page_final"
+        echo $ls11m
+        echo "$ls11t"" (""$ls11ts""): ""$ls11m" >> $llast
 fi
 # Загружаем финальную страницу.
 /usr/bin/wget -O dl_page_final.tmp $link_to_dl_page_final --user-agent="$ua" --no-cookies --header="$lfcookie" $l
