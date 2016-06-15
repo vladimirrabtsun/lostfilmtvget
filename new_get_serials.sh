@@ -265,7 +265,7 @@ fi
 link_to_dl_page_final=$(cat dl_page_stage.tmp | grep -ie 'location.replace("http://retre.org' | grep -ioe '(".*")' | cut -c 3- | rev | cut -c 3- | rev)
 # Проверяем наличие финальной ссылки.
 if [ -e "$link_to_dl_page_final" ]; then
-	# [LOG] Логирование события.
+        # [LOG] Логирование события.
         ls11t=`date`
         ls11ts=`date +%s`
         ls11m="[ERROR] Ошибка (Код:9). Переменная link_to_dl_page_final не назначена."
@@ -281,6 +281,21 @@ else
 fi
 # Загружаем финальную страницу.
 /usr/bin/wget -O dl_page_final.tmp $link_to_dl_page_final --user-agent="$ua" --no-cookies --header="$lfcookie" $l
+if [ ! -f page_final.tmp ]; then
+        # [LOG] Логирование события.
+        ls12t=`date`
+        ls12ts=`date +%s`
+        ls12m="[ERROR] Ошибка (Код:) Не найден файл page_final.tmp."
+        echo $ls12m
+        echo "$ls12t"" (""$ls12ts""): ""$ls12m" >> $llast
+else
+        # [LOG] Логирование события.
+        ls12t=`date`
+        ls12ts=`date +%s`
+        ls12m="[OK] Файл page_final.tmp успешно загружен."
+        echo $ls12m
+        echo "$ls12t"" (""$ls12ts""): ""$ls12m" >> $llast
+fi
 # Определяем ссылку для загрузки торрент-файла.
 if [ "$ser_name" = "$ser_name_c_210" ];then
 link_to_dl_torrent=$(cat dl_page_final.tmp | grep -m1 -ie '1080p WEBRip.' -A 1 | grep -ioe '<a href=".*" ' | cut -c 10- | rev | cut -c 3- | rev)
