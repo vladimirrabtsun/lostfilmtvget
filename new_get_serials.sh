@@ -302,6 +302,21 @@ link_to_dl_torrent=$(cat dl_page_final.tmp | grep -m1 -ie '1080p WEBRip.' -A 1 |
 else
 link_to_dl_torrent=$(cat dl_page_final.tmp | grep -ie '1080p WEB-DLRip\.' -A 1 | grep -ioe '<a href=".*" ' | cut -c 10- | rev | cut -c 3- | rev)
 fi
+if [ -e $link_to_dl_torrent ]; then
+        # [LOG] Логирование события.
+        ls13t=`date`
+        ls13ts=`date +%s`
+        ls13m="[ERROR] Ошибка (Код:) Не определена переменная link_to_dl_torrent"
+        echo $ls13m
+        echo "$ls13t"" (""$ls13ts""): ""$ls13m" >> $llast
+else
+        # [LOG] Логирование события.
+        ls13t=`date`
+        ls13ts=`date +%s`
+        ls13m="[OK] Определена переменная link_to_dl_torrent=$link_to_dl_torrent"
+        echo $ls13m
+        echo "$ls13t"" (""$ls13ts""): ""$ls13m" >> $llast
+fi
 # Формируем файл с информацией о ссылке и наименовании торрент-файла, а также о наименовании, сезоне и серии сериала.
 echo "$link_to_dl_torrent"";""$ser_name""-""$ser_c""-""$ser_s_post""-""$ser_e_post"".torrent"";""$ser_name_rus"".(cезон.""$ser_s_post"".серия.""$ser_e_post"")" >> list_to_download.tmp
 # Удаляем файлы промежуточной и финальной страниц, т.к. в следующем цикле они изменятся.

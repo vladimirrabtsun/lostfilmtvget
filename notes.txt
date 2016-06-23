@@ -1,2 +1,8 @@
 # Монтирование ftp-раздела:
 sudo curlftpfs pi:Zxcasdqwe52.@10.0.0.1/sda1/ ~/Downloads/share_tor/ -o allow_other
+
+# Изменение кодировки:
+cat filename.txt|iconv -f cp1251 > filename_utf8.txt
+
+# Была проблема вывода строк из файла в цикле for, правильный вариант:
+> for line in "`cat $FILE`"; do echo "$line"; done 
