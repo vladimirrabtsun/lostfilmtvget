@@ -326,40 +326,53 @@ done
 # Загрузка торрент-файлов и отправка сообщения о наличии новых серий.
 for l in `cat list_to_download.tmp`
 do
-# Забираем ссылку для загрузки торрент-файла.
-tor_link=`echo $l | cut -d';' -f1`
-# Забираем название торрент-файла.
-tor_name=`echo $l | cut -d';' -f2`
-# Забираем наименование сериала на русском языке, номер сезона и номер серии.
-tor_name_msg=`echo $l | cut -d';' -f3`
-# Проверяем наличие файла в директории, на которую смотрит Transmission-Daemon.
-if [ ! -f $WDIR/$tor_name ]
-then
-# Загружаем торрент-файл.
-/usr/bin/wget -nc -O $tor_name $tor_link
-# Передаем информацию о новой серии в файл, для последующего уведомления на почту.
-echo $tor_name_msg >> downloaded_to_mail
-# Перемещаем загруженный торрент-файл в директорию, на которую смотрит Transmission-Daemon.
-mv $tor_name $WDIR
-else
-echo "Файл $tor_name уже существует в $WDIR"
-fi
+	# Забираем ссылку для загрузки торрент-файла.
+	tor_link=`echo $l | cut -d';' -f1`
+	# Забираем название торрент-файла.
+	tor_name=`echo $l | cut -d';' -f2`
+	# Забираем наименование сериала на русском языке, номер сезона и номер серии.
+	tor_name_msg=`echo $l | cut -d';' -f3`
+	# Проверяем наличие файла в директории, на которую смотрит Transmission-Daemon.
+	if [ ! -f $WDIR/$tor_name ]
+	then
+		# Загружаем торрент-файл.
+		/usr/bin/wget -nc -O $tor_name $tor_link
+		# Передаем информацию о новой серии в файл, для последующего уведомления на почту.
+		echo $tor_name_msg >> downloaded_to_mail
+		# Перемещаем загруженный торрент-файл в директорию, на которую смотрит Transmission-Daemon.
+		mv $tor_name $WDIR
+	else
+		echo "Файл $tor_name уже существует в $WDIR"
+	fi
 done
 # Посылаем уведомление о нывых сериях на почту.
 if [ -f downloaded_to_mail ]
 then
-# Получаем количество новых серий.
-ser_col=`wc -l downloaded_to_mail | cut -d ' ' -f1`
-# Реквизиты для отправки уведомления на почту.
-SERVER="followmortimer.com:25"
-FROM="alert@followmortimer.com"
-TO="vladimir.rabtsun@gmail.com,wolf_159@mail.ru"
-MSG=`cat downloaded_to_mail`
-SUB="Новые серии: ""$ser_col"
-xu=alert@followmortimer.com
-xp=lostfilmalert
-# Отправка сообщения.
-sendEmail -xu $xu -xp $xp -f $FROM -t $TO -u $SUB -m $MSG -s $SERVER
+	# Получаем количество новых серий.
+	ser_col=`wc -l downloaded_to_mail | cut -d ' ' -f1`
+	# Реквизиты для отправки уведомления на почту.
+	SERVER="followmortimer.com:25"
+	FROM="alert@followmortimer.com"
+	TO="vladimir.rabtsun@gmail.com,wolf_159@mail.ru"
+	MSG=`cat downloaded_to_mail`
+	SUB="Новые серии: ""$ser_col"
+	xu=alert@followmortimer.com
+	xp=lostfilmalert
+	# Отправка сообщения.
+        # [LOG] Логирование события.
+        ls14t=`date`
+        ls14ts=`date +%s`
+        ls14m="[OK] Отправка уведомления о новых сериях на почту."
+        echo $ls14m
+        echo "$ls14t"" (""$ls14ts""): ""$ls14m" >> $llast
+	sendEmail -xu $xu -xp $xp -f $FROM -t $TO -u $SUB -m $MSG -s $SERVER
+else
+	# [LOG] Логирование события.
+	ls14t=`date`
+	ls14ts=`date +%s`
+	ls14m="[OK] Файл downloaded_to_mail не найден."
+	echo $ls14m
+	echo "$ls14t"" (""$ls14ts""): ""$ls14m" >> $llast
 fi
 # Удаляем временные файлы.
 rm list_to_download.tmp
