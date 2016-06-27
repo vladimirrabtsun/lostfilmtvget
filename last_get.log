@@ -1,3 +1,14 @@
-Mon Jun 13 13:03:15 +06 2016 (1465801395): Загрузка RSS с адреса: http://www.lostfilm.tv/rssdd.xml
-Mon Jun 13 13:03:15 +06 2016 (1465801395): [OK] Загрузка RSS состоялась успешно (http://www.lostfilm.tv/rssdd.xml)
-Mon Jun 13 13:03:15 +06 2016 (1465801395): [OK] Искомых сериалов среди новых не найдено (qty_of_listed=0)
+Mon Jun 27 12:11:31 +06 2016 (1467007891): Загрузка RSS с адреса: http://www.lostfilm.tv/rssdd.xml
+Mon Jun 27 12:11:31 +06 2016 (1467007891): [OK] Загрузка RSS состоялась успешно (http://www.lostfilm.tv/rssdd.xml)
+Mon Jun 27 12:11:31 +06 2016 (1467007891): [OK] Среди новых сериалов найдены искомые (qty_of_listed=1)
+Mon Jun 27 12:11:31 +06 2016 (1467007891): [OK] Определение номера сезона сериала: ser_s_post = 5
+Mon Jun 27 12:11:31 +06 2016 (1467007891): [OK] Определение номера серии сериала: ser_e_post = 9
+Mon Jun 27 12:11:31 +06 2016 (1467007891): [OK] Определение наименования сериала: ser_name = Person.of.Interest
+Mon Jun 27 12:11:31 +06 2016 (1467007891): [OK] Определение наименования (рус.) и порядкового номера сериала: ser_name_rus = Подозреваемый , ser_c=159
+Mon Jun 27 12:11:31 +06 2016 (1467007891): [OK] Определение порядкового номера сериала: ser_c = 159 (Person.of.Interest)
+Mon Jun 27 12:11:31 +06 2016 (1467007891): [OK] Все переменные назначены.
+Mon Jun 27 12:11:31 +06 2016 (1467007891): [OK] Определение страницы с ссылками для загрузки: 
+Mon Jun 27 12:11:32 +06 2016 (1467007892): [OK] Файл dl_page_stage.tmp успешно загружен.
+Mon Jun 27 12:11:32 +06 2016 (1467007892): [OK] Определение ссылки: link_to_dl_page_final=http://retre.org/?c=159&s=5&e=9&u=4762870&h=5f42454eef9b1e8d6334d12f2cd09a64
+Mon Jun 27 12:11:32 +06 2016 (1467007892): [ERROR] Ошибка (Код:) Не найден файл page_final.tmp.
+Mon Jun 27 12:11:33 +06 2016 (1467007893): [OK] Определена переменная link_to_dl_torrent=http://tracktor.in/td.php?s=RYBmf6FJ%2FQ%2FHKorS1OmOsxG%2BRC44Ee8Sp3DGhJ6K0W1O7P1gVJL7aFuQJptYj7Cxzwbfe82nEF4h5A3oXFcrZBJHmIC7HubbQP5MB6x%2Fb1z31pehY2ISTFLz7Pow7LVHYN%2BXQQ%3D%3D
